@@ -1,15 +1,17 @@
 package com.guru.ecommerce.Service.Category;
 
 import com.guru.ecommerce.Model.Category;
-
-import java.util.List;
+import com.guru.ecommerce.Payload.CategoryListResponseDTO;
+import com.guru.ecommerce.Payload.CategoryRequestDTO;
+import com.guru.ecommerce.Payload.CreateCategoryRequestDTO;
+import com.guru.ecommerce.Payload.CategoryResponseDTO;
 
 
 public interface CategoryService {
-    List<Category> getAllCategories();
-    Category createCategory(Category category);
+    CategoryListResponseDTO getAllCategories(Integer pageNumber,Integer pageSize,String sortBy,String sortOrder);
+    CategoryResponseDTO createCategory(CreateCategoryRequestDTO category);
 
-    Category deleteCategory(Long id);
+    CategoryResponseDTO deleteCategory(Long id);
 
-    Category updateCategory(Long id, Category category);
+    CategoryResponseDTO updateCategory(Long id, CategoryRequestDTO category);
 }
