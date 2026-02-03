@@ -53,4 +53,24 @@ public class MyGlobalExceptionHandler {
         return new ResponseEntity<>(resp, HttpStatus.CONFLICT);
     }
 
+    @ExceptionHandler(ResourceNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleException(ResourceNotFoundException e, WebRequest webRequest) {
+        ErrorResponse resp = new ErrorResponse();
+        resp.timestamp = LocalDateTime.now();
+        resp.errorMessage = e.getMessage();
+        resp.errorCode = HttpStatus.NOT_FOUND;
+        resp.errorDetail = "Given Resource not found";
+        return new ResponseEntity<>(resp, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(ResourceDuplicationException.class)
+    public ResponseEntity<ErrorResponse> ResourceDuplicationException(ResourceDuplicationException e, WebRequest webRequest) {
+        ErrorResponse resp = new ErrorResponse();
+        resp.timestamp = LocalDateTime.now();
+        resp.errorMessage = e.getMessage();
+        resp.errorCode = HttpStatus.CONFLICT;
+        resp.errorDetail = "Given Resource Already Exists";
+        return new ResponseEntity<>(resp, HttpStatus.CONFLICT);
+    }
+
 }
