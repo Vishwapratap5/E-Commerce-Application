@@ -17,5 +17,6 @@ public class ProductResponseDTO {
     private double price;
     private double specialPrice;
     private String categoryName;
+    private Integer quantity;
 }
 

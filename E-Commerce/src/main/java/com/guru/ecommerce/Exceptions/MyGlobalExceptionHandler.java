@@ -73,4 +73,24 @@ public class MyGlobalExceptionHandler {
         return new ResponseEntity<>(resp, HttpStatus.CONFLICT);
     }
 
+    @ExceptionHandler(UserAlreadyExistsException.class)
+    public ResponseEntity<ErrorResponse> UserAlreadyExistsException(UserAlreadyExistsException e, WebRequest webRequest) {
+        ErrorResponse resp = new ErrorResponse();
+        resp.timestamp = LocalDateTime.now();
+        resp.errorMessage = e.getMessage();
+        resp.errorCode = HttpStatus.CONFLICT;
+        resp.errorDetail = "Given Resource Already Exists";
+        return new ResponseEntity<>(resp, HttpStatus.CONFLICT);
+    }
+
+    @ExceptionHandler(APIException.class)
+    public ResponseEntity<ErrorResponse> APIException(APIException e, WebRequest webRequest) {
+        ErrorResponse resp = new ErrorResponse();
+        resp.timestamp = LocalDateTime.now();
+        resp.errorMessage = e.getMessage();
+        resp.errorCode = HttpStatus.BAD_REQUEST;
+        resp.errorDetail = e.getMessage();
+        return new ResponseEntity<>(resp, HttpStatus.BAD_REQUEST);
+    }
+
 }

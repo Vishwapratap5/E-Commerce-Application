@@ -1,11 +1,10 @@
 package com.guru.ecommerce.Controller;
 
 import com.guru.ecommerce.Configurations.AppConstants;
-import com.guru.ecommerce.Model.Category;
 import com.guru.ecommerce.Payload.CategoryListResponseDTO;
 import com.guru.ecommerce.Payload.CategoryRequestDTO;
-import com.guru.ecommerce.Payload.CreateCategoryRequestDTO;
 import com.guru.ecommerce.Payload.CategoryResponseDTO;
+import com.guru.ecommerce.Payload.CreateCategoryRequestDTO;
 import com.guru.ecommerce.Service.Category.CategoryService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;

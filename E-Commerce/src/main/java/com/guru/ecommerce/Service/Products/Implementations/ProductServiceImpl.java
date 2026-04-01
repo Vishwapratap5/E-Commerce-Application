@@ -1,14 +1,18 @@
 package com.guru.ecommerce.Service.Products.Implementations;
 
+import com.guru.ecommerce.DAO.CartRepository;
 import com.guru.ecommerce.DAO.CategoryDAO;
 import com.guru.ecommerce.DAO.ProductDAO;
 import com.guru.ecommerce.Exceptions.ResourceDuplicationException;
 import com.guru.ecommerce.Exceptions.ResourceNotFoundException;
+import com.guru.ecommerce.Model.Cart;
 import com.guru.ecommerce.Model.Category;
 import com.guru.ecommerce.Model.Product;
+import com.guru.ecommerce.Payload.CartDTO;
 import com.guru.ecommerce.Payload.ProductListResponseDTO;
 import com.guru.ecommerce.Payload.ProductRequestDTO;
 import com.guru.ecommerce.Payload.ProductResponseDTO;
+import com.guru.ecommerce.Service.Cart.CartService;
 import com.guru.ecommerce.Service.FileService.FileService;
 import com.guru.ecommerce.Service.Products.ProductService;
 import org.modelmapper.ModelMapper;
@@ -22,7 +26,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class ProductServiceImpl implements ProductService {
@@ -38,6 +44,12 @@ public class ProductServiceImpl implements ProductService {
 
    @Autowired
    private FileService fileService;
+
+   @Autowired
+   private CartRepository  cartRepository;
+
+   @Autowired
+   private CartService cartService;
 
    @Value("${file.upload-dir}")
    private String path;
@@ -67,6 +79,7 @@ public class ProductServiceImpl implements ProductService {
             product.setCategory(category);
             product.setImage(productRequestDTO.getImage());
             product.setSpecialPrice(specialPrice);
+            product.setQuantity(productRequestDTO.getQuantity());
 
             Product savedProduct=productDAO.save(product);
 
@@ -77,6 +90,7 @@ public class ProductServiceImpl implements ProductService {
                     .price(savedProduct.getPrice())
                     .specialPrice(savedProduct.getSpecialPrice())
                     .categoryName(savedProduct.getCategory().getCategoryName())
+                    .quantity(savedProduct.getQuantity())
                     .build();
         }else{
             throw new ResourceDuplicationException("this resource already exists");
@@ -194,6 +208,19 @@ public class ProductServiceImpl implements ProductService {
 
         Product savedProduct=productDAO.save(productFromDb);
 
+        List<Cart> carts=cartRepository.findCartsByProductId(productId);
+
+        List<CartDTO> cartDTOs=carts.stream().map(cart->{
+            CartDTO cartDTO=modelMapper.map(cart,CartDTO.class);
+            List<ProductResponseDTO> products=cart.getCartItems().stream().map(product->modelMapper.map(product.getProduct(),ProductResponseDTO.class)).toList();
+            cartDTO.setProducts(products);
+            return cartDTO;
+        }).toList();
+
+        cartDTOs.forEach(cart->{
+            cartService.updateProductInCarts(cart.getCartId(),productId);
+        });
+
         return modelMapper.map(savedProduct,ProductResponseDTO.class);
     }
 
@@ -204,7 +231,13 @@ public class ProductServiceImpl implements ProductService {
 
         Product product=productDAO.findById(productId)
                                   .orElseThrow(()->new ResourceNotFoundException("Product with id:"+productId+" not found"));
-       productDAO.delete(product);
+
+        List<Cart> carts=cartRepository.findCartsByProductId(productId);
+        carts.forEach(cart->{
+            cartService.deleteProductFromCart(cart.getId(),productId);
+        });
+        productDAO.delete(product);
+
         return modelMapper.map(product,ProductResponseDTO.class);
     }
 

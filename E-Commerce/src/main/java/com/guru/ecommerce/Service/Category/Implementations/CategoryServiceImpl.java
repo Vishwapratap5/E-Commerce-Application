@@ -1,14 +1,13 @@
 package com.guru.ecommerce.Service.Category.Implementations;
 
-import com.guru.ecommerce.Configurations.AppConstants;
 import com.guru.ecommerce.DAO.CategoryDAO;
 import com.guru.ecommerce.Exceptions.CategoryDuplicationException;
 import com.guru.ecommerce.Exceptions.CategoryNotFoundException;
 import com.guru.ecommerce.Model.Category;
-import com.guru.ecommerce.Payload.CategoryRequestDTO;
 import com.guru.ecommerce.Payload.CategoryListResponseDTO;
-import com.guru.ecommerce.Payload.CreateCategoryRequestDTO;
+import com.guru.ecommerce.Payload.CategoryRequestDTO;
 import com.guru.ecommerce.Payload.CategoryResponseDTO;
+import com.guru.ecommerce.Payload.CreateCategoryRequestDTO;
 import com.guru.ecommerce.Service.Category.CategoryService;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
