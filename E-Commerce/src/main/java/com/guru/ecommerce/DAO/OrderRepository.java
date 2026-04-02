@@ -1,10 +1,9 @@
 package com.guru.ecommerce.DAO;
 
-import com.guru.ecommerce.Model.Address;
+import com.guru.ecommerce.Model.Order;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface AddressRepository extends JpaRepository<Address, Long> {
-
+public interface OrderRepository extends JpaRepository<Order, Long> {
 }
