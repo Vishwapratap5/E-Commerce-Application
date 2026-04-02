@@ -3,6 +3,7 @@ package com.guru.ecommerce.Model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
@@ -43,12 +44,13 @@ public class Address {
     private String country;
 
     @NotBlank
+    @NotNull
     @Size(min =6 , message = "Pin name Must be at least  6 characters")
     private String pinCode;
 
-    @ManyToMany(mappedBy = "addresses")
+    @ManyToOne
+    @JoinColumn(name = "user_id")
     @JsonIgnore
-    @ToString.Exclude
-    private List<User> users=new ArrayList<>();
+    private User user;
 
 }
